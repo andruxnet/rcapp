@@ -31,5 +31,40 @@ app.get('/login/complete', function(req, res) {
   });
 });
 
+app.get('/people/me', function(req, res){
+  client.people.me()
+  .then(function(me) {
+    res.send(me);
+  });
+})
+
+app.get('/people/:person_id', function(req, res){
+  client.people.person(req.params.person_id)
+  .then(function(person) {
+    res.send(person);
+  });
+})
+
+app.get('/batches', function(req, res){
+  client.batches.list()
+  .then(function(batches) {
+    res.send(batches);
+  });
+})
+
+app.get('/batches/:batch_id', function(req, res){
+  client.batches.batch(req.params.batch_id)
+  .then(function(batch) {
+    res.send(batch);
+  });
+})
+
+app.get('/batches/:batch_id/people', function(req, res){  
+  client.batches.people(req.params.batch_id)
+  .then(function(people) {
+    res.send(people);
+  });
+})
+
 app.listen(3000);
 console.log('Live');
