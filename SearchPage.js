@@ -66,6 +66,12 @@ var styles = StyleSheet.create({
 
 class SearchPage extends Component {
 
+  getInitialState: function () {
+    return {
+      
+    }
+  }
+
   constructor(props) {
     super(props);
     this.state = {

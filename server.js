@@ -1,5 +1,9 @@
 var hackerschool = require('hackerschool-api'),
-    app = require('express')();
+    app = require('express')(),
+    async = require('async');
+
+var allPeople = [];
+var allBatches = [];
 
 var client = hackerschool.client();
 
@@ -31,6 +35,18 @@ app.get('/login/complete', function(req, res) {
   });
 });
 
+app.get('/allpeople', function(req, res){
+  async.each(allBatches, function(id){
+    console.log(id);
+    client.batches.people(id)
+    .then(function(people){ 
+      allPeople.push(people);
+      res.send(allPeople);
+    })
+  })
+  console.log(allPeople);
+})
+
 app.get('/people/me', function(req, res){
   client.people.me()
   .then(function(me) {
@@ -48,6 +64,10 @@ app.get('/people/:person_id', function(req, res){
 app.get('/batches', function(req, res){
   client.batches.list()
   .then(function(batches) {
+    for (var key in batches) {
+      allBatches.push(batches[key].id);
+    }
+    //console.log(allBatches);
     res.send(batches);
   });
 })
