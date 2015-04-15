@@ -1,6 +1,7 @@
 'use strict'
 
 var React = require('react-native');
+var SearchPage = require('./SearchPage');
 
 var {
 	StyleSheet,
@@ -68,16 +69,22 @@ class LoginPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			userString: 'Username',
-			passString: 'Password',
+			userString: '',
+			passString: '',
 			isLoading: false
 		};
 	}
 
-	onLoginTextChanged(event) {
+	onUserTextChanged(event) {
 		console.log('onLoginchanged');
-		this.setState({ searchString: event.nativeEvent.text});
-		console.log(this.state.searchString);
+		this.setState({ userString: event.nativeEvent.text});
+		console.log(this.state.userString);
+	}
+
+	onPassTextChanged(event) {
+		console.log('onLoginchanged');
+		this.setState({ passString: event.nativeEvent.text});
+		console.log(this.state.passString);
 	}
 
 	_executeLogin(login) {
@@ -100,7 +107,7 @@ class LoginPage extends Component {
 	    ( <View/>);
 
 	    return (
-	      <View style={styles.container}>
+	     <View style={styles.container}>
 	      <Image source={require('image!rclogo')} style={styles.image}/>
 	        <Text style={styles.description}>
 	          Recurse Center!
@@ -108,15 +115,15 @@ class LoginPage extends Component {
 	      <View style={styles.flowRight}>
 		  <TextInput
 			    style={styles.searchInput}
-		        value={this.state.searchString}
-		        onChange={this.onLoginTextChanged.bind(this)}
-		        placeholder='Username.'/>
+		        value={this.state.userString}
+		        onChange={this.onUserTextChanged.bind(this)}
+		        placeholder='Username'/>
 			</View>
 			<View style={styles.flowRight}>
 		  <TextInput
 			    style={styles.searchInput}
-		        value={this.state.searchString}
-		        onChange={this.onLoginTextChanged.bind(this)}
+		        value={this.state.passString}
+		        onChange={this.onPassTextChanged.bind(this)}
 		        placeholder='Password'/>
 			</View>
 			<View style={styles.flowRight}>

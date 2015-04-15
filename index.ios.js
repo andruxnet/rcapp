@@ -22,6 +22,8 @@ class RecurseCenterApp extends React.Component {
         style={styles.container}
         initialRoute={{
           title: 'RC Finder',
+          backButtonTitle: 'Back',
+          rightButtonTitle: 'Home',
           component: LoginPage
         }}/>
     );
