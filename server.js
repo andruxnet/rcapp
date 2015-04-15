@@ -37,7 +37,7 @@ app.get('/login/complete', function(req, res) {
 
 app.get('/allpeople', function(req, res){
   async.each(allBatches, function(id){
-    console.log(id);
+    //console.log(id);
     client.batches.people(id)
     .then(function(people){ 
       allPeople.push(people);

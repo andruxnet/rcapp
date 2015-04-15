@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-var SearchPage = require('./SearchPage');
+var LoginPage = require('./LoginPage');
 
 var styles = React.StyleSheet.create({
   text: {
@@ -22,7 +22,7 @@ class RecurseCenterApp extends React.Component {
         style={styles.container}
         initialRoute={{
           title: 'RC Finder',
-          component: SearchPage
+          component: LoginPage
         }}/>
     );
   }
