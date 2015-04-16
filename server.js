@@ -13,6 +13,8 @@ var auth = hackerschool.auth({
   redirect_uri: 'http://localhost:3000/login/complete'
 });
 
+//https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=(f05c4dc14b4c383ab308fc2695def483a0cdcf6e70a3e0c356523f814bdff26e)&redirect_uri=(rcapp://)
+
 app.get('/login', function(req, res) {
   var authUrl = auth.createAuthUrl();
   //console.log(authUrl);

@@ -3,6 +3,7 @@
 var React = require('react-native');
 var SearchPage = require('./SearchPage');
 
+
 var {
 	StyleSheet,
 	Text,
@@ -10,7 +11,8 @@ var {
 	View,
 	TouchableHighlight,
 	Image,
-	Component
+	Component,
+	LinkingIOS
 } = React;
 
 var styles = StyleSheet.create({
@@ -64,15 +66,24 @@ var styles = StyleSheet.create({
 	},
 });
 
+var auth = {
+	client_id: 'b203868ed8d57486a3806dffff75729aff20e01a264121fd6de24a45d2f5246b',
+	client_secret: 'b3c5a9991f9f3d4b5b20870a60d3abd4f7debdf4d98e407cd341a008f854bfb2',
+	redirect_uri: 'rcapp://complete'
+}
+
 class LoginPage extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			userString: '',
-			passString: '',
+			message: '',
 			isLoading: false
 		};
+	}
+
+	componentDidMount() {
+	  LinkingIOS.addEventListener('url', this._handleOpenURL);
 	}
 
 	onUserTextChanged(event) {
@@ -93,9 +104,20 @@ class LoginPage extends Component {
 	}
 
 	onLoginPressed() {
-		var login = urlForLogin(this.state.userString, this.state.passString);
-		this._executeLogin(login);
+		fetch("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")")
+		  .then(response => console.log(response))
+		  .catch(error => 
+		     this.setState({
+		      isLoading: false,
+		      message: 'Something bad happened ' + error
+		   }));
+		LinkingIOS.openURL("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")");
 	}
+
+	_handleResponse(response) {
+	  console.log(response);
+	}
+
 
 	render() {
 	    console.log('SearchPage.render');
@@ -111,29 +133,14 @@ class LoginPage extends Component {
 	      <Image source={require('image!rclogo')} style={styles.image}/>
 	        <Text style={styles.description}>
 	          Recurse Center!
-	        </Text>
-	      <View style={styles.flowRight}>
-		  <TextInput
-			    style={styles.searchInput}
-		        value={this.state.userString}
-		        onChange={this.onUserTextChanged.bind(this)}
-		        placeholder='Username'/>
-			</View>
-			<View style={styles.flowRight}>
-		  <TextInput
-			    style={styles.searchInput}
-		        value={this.state.passString}
-		        onChange={this.onPassTextChanged.bind(this)}
-		        placeholder='Password'/>
-			</View>
-			<View style={styles.flowRight}>
+	        </Text>	  
 			<TouchableHighlight style={styles.button}
 			      underlayColor='#99d9f4'
 	          	  onPress={this.onLoginPressed.bind(this)}>
 			    <Text style={styles.buttonText}>Login</Text>
-			  </TouchableHighlight>
-			</View>
+			 </TouchableHighlight>
 			{spinner}
+			<Text style={styles.description}>{this.state.message}</Text>
 	      </View>
 	    );
 	  }

@@ -64,6 +64,7 @@ var styles = StyleSheet.create({
   },
 });
 
+
 class SearchPage extends Component {
 
   constructor(props) {
