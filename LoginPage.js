@@ -105,7 +105,7 @@ class LoginPage extends Component {
 
 	onLoginPressed() {
 		fetch("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")")
-		  .then(response => console.log(response))
+		  .then(response => _handleResponse(response))
 		  .catch(error => 
 		     this.setState({
 		      isLoading: false,
@@ -115,7 +115,8 @@ class LoginPage extends Component {
 	}
 
 	_handleResponse(response) {
-	  console.log(response);
+	  var allpeople = response;
+	  console.log(allpeople.length);
 	}
 
 

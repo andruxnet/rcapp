@@ -2,6 +2,7 @@
 
 var React = require('react-native');
 var LoginPage = require('./LoginPage');
+var WebView = require('./WebView')
 
 var styles = React.StyleSheet.create({
   text: {
@@ -24,7 +25,7 @@ class RecurseCenterApp extends React.Component {
           title: 'RC Finder',
           backButtonTitle: 'Back',
           rightButtonTitle: 'Home',
-          component: LoginPage
+          component: WebView
         }}/>
     );
   }
