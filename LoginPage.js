@@ -12,7 +12,8 @@ var {
 	TouchableHighlight,
 	Image,
 	Component,
-	LinkingIOS
+	LinkingIOS,
+	WebView
 } = React;
 
 var styles = StyleSheet.create({
@@ -78,7 +79,8 @@ class LoginPage extends Component {
 		super(props);
 		this.state = {
 			message: '',
-			isLoading: false
+			isLoading: false,
+			loginHtml: null
 		};
 	}
 
@@ -105,13 +107,16 @@ class LoginPage extends Component {
 
 	onLoginPressed() {
 		fetch("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")")
-		  .then(response => _handleResponse(response))
+		  .then(response =>
+
+		    this.setState({isLoading: false, loginHtml: response['_bodyText']})) 
+		  	
 		  .catch(error => 
 		     this.setState({
 		      isLoading: false,
 		      message: 'Something bad happened ' + error
 		   }));
-		LinkingIOS.openURL("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")");
+		//LinkingIOS.openURL("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")");
 	}
 
 	_handleResponse(response) {
@@ -129,9 +134,12 @@ class LoginPage extends Component {
 	        size='large'/> ) :
 	    ( <View/>);
 
-	    return (
-	     <View style={styles.container}>
-	      <Image source={require('image!rclogo')} style={styles.image}/>
+	    var currentView;
+	    if(true) {
+           currentView = <WebView startInLoadingState={true} url={"https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")"} />
+
+	    } else {
+          currentView = <View><Image source={require('image!rclogo')} style={styles.image}/>
 	        <Text style={styles.description}>
 	          Recurse Center!
 	        </Text>	  
@@ -141,7 +149,13 @@ class LoginPage extends Component {
 			    <Text style={styles.buttonText}>Login</Text>
 			 </TouchableHighlight>
 			{spinner}
-			<Text style={styles.description}>{this.state.message}</Text>
+			<Text style={styles.description}>{this.state.message}</Text></View>
+	    }
+
+
+	    return (
+	     <View style={styles.container}>
+	       {currentView}   
 	      </View>
 	    );
 	  }

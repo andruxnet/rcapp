@@ -15,6 +15,12 @@ var HEADER = '#3b5998';
 var BGWASH = 'rgba(255,255,255,0.8)';
 var DISABLED_WASH = 'rgba(255,255,255,0.25)';
 
+var auth = {
+  client_id: 'b203868ed8d57486a3806dffff75729aff20e01a264121fd6de24a45d2f5246b',
+  client_secret: 'b3c5a9991f9f3d4b5b20870a60d3abd4f7debdf4d98e407cd341a008f854bfb2',
+  redirect_uri: 'rcapp://complete'
+}
+
 var TEXT_INPUT_REF = 'urlInput';
 var WEBVIEW_REF = 'webview';
 var DEFAULT_URL = 'https://www.hackerschool.com';
