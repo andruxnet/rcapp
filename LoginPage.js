@@ -1,9 +1,9 @@
 'use strict'
-
+ 
 var React = require('react-native');
 var SearchPage = require('./SearchPage');
-
-
+ 
+ 
 var {
 	StyleSheet,
 	Text,
@@ -15,13 +15,17 @@ var {
 	LinkingIOS,
 	WebView
 } = React;
-
+ 
 var styles = StyleSheet.create({
 	description: {
 		marginBottom: 20,
 		fontSize: 18,
 		textAlign: 'center',
 		color: '#656565'
+	},
+	web_view_container: {
+		flex: 1,
+		flexDirection: 'column',
 	},
 	container: {
 		padding: 30,
@@ -66,102 +70,110 @@ var styles = StyleSheet.create({
 	  height: 130
 	},
 });
-
+ 
 var auth = {
 	client_id: 'b203868ed8d57486a3806dffff75729aff20e01a264121fd6de24a45d2f5246b',
 	client_secret: 'b3c5a9991f9f3d4b5b20870a60d3abd4f7debdf4d98e407cd341a008f854bfb2',
 	redirect_uri: 'rcapp://complete'
 }
-
+ 
 class LoginPage extends Component {
-
+ 
 	constructor(props) {
 		super(props);
 		this.state = {
 			message: '',
 			isLoading: false,
-			loginHtml: null
+			authCode: null,
+			authCodeRequested: false
 		};
 	}
-
+ 
 	componentDidMount() {
 	  LinkingIOS.addEventListener('url', this._handleOpenURL);
 	}
-
+ 
 	onUserTextChanged(event) {
 		console.log('onLoginchanged');
 		this.setState({ userString: event.nativeEvent.text});
 		console.log(this.state.userString);
 	}
-
+ 
 	onPassTextChanged(event) {
 		console.log('onLoginchanged');
 		this.setState({ passString: event.nativeEvent.text});
 		console.log(this.state.passString);
 	}
-
+ 
 	_executeLogin(login) {
 		console.log(login);
-		this.setState({ isLoading: true });
+		this.setState({ isLoading: true, authCodeRequested: true });
 	}
-
+ 
 	onLoginPressed() {
-		fetch("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")")
-		  .then(response =>
-
-		    this.setState({isLoading: false, loginHtml: response['_bodyText']})) 
-		  	
-		  .catch(error => 
-		     this.setState({
-		      isLoading: false,
-		      message: 'Something bad happened ' + error
-		   }));
+		this.setState({authCodeRequested: true})
+		// fetch("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")")
+		//   .then(response =>
+		//     this.setState({isLoading: false, loginHtml: response['_bodyText']}))
+ 
+		//   .catch(error =>
+		//      this.setState({
+		//       isLoading: false,
+		//       message: 'Something bad happened ' + error
+		//    }));
 		//LinkingIOS.openURL("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")");
 	}
-
+ 
 	_handleResponse(response) {
 	  var allpeople = response;
 	  console.log(allpeople.length);
 	}
-
-
+ 
+	onWebViewChange(param){
+		var codeReg = new RegExp(/rcapp:\/\/complete\?code=(.+)$/);
+		var codeMatch = param.url.match(codeReg)
+		if (codeMatch) {
+			console.log('YOUR CODE: '+ codeMatch[1])
+			this.setState({authCode: codeMatch[1]})
+		}
+	}
+ 
+ 
 	render() {
 	    console.log('SearchPage.render');
-
+ 
 	    var spinner = this.state.isLoading ?
 	    ( <ActivityIndicatorIOS
 	        hidden='true'
 	        size='large'/> ) :
 	    ( <View/>);
-
+ 
 	    var currentView;
-	    if(true) {
-           currentView = <WebView startInLoadingState={true} url={"https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")"} />
-
+	    if(this.state.authCodeRequested && !this.state.authCode) {
+        currentView =
+          <View style={styles.web_view_container}>
+            <WebView
+              startInLoadingState={true}
+              onNavigationStateChange={this.onWebViewChange.bind(this)}
+              url={"https://www.recurse.com/oauth/authorize?response_type=code&client_id="+auth.client_id+"&redirect_uri="+auth.redirect_uri}
+             />
+          </View>
 	    } else {
-          currentView = <View><Image source={require('image!rclogo')} style={styles.image}/>
+          currentView = <View style={styles.container}><Image source={require('image!rclogo')} style={styles.image}/>
 	        <Text style={styles.description}>
 	          Recurse Center!
-	        </Text>	  
+	        </Text>
 			<TouchableHighlight style={styles.button}
 			      underlayColor='#99d9f4'
 	          	  onPress={this.onLoginPressed.bind(this)}>
 			    <Text style={styles.buttonText}>Login</Text>
 			 </TouchableHighlight>
 			{spinner}
-			<Text style={styles.description}>{this.state.message}</Text></View>
+			<Text style={styles.description}>{this.state.authCode}</Text></View>
 	    }
-
-
-	    return (
-	     <View style={styles.container}>
-	       {currentView}   
-	      </View>
-	    );
+ 
+	    return currentView;
 	  }
 	}
-
+ 
 module.exports = LoginPage;
-
-
-
