@@ -2,7 +2,7 @@
  
 var React = require('react-native');
 var SearchPage = require('./SearchPage');
-var WebView = require('./WebView')
+var LoginWebView = require('./LoginWebView')
  
  
 var {
@@ -13,8 +13,7 @@ var {
 	TouchableHighlight,
 	Image,
 	Component,
-	LinkingIOS,
-	WebView
+	LinkingIOS
 } = React;
  
 var styles = StyleSheet.create({
@@ -102,7 +101,8 @@ class LoginPage extends Component {
 		this.setState({authCodeRequested: true})
 		this.props.navigator.push({
 			title: 'WebView',
-			component: WebView
+			component: LoginWebView,
+			passProps: { onCodeObtain: this.props.onTokenGet }
 		})
 		// fetch("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")")
 		//   .then(response =>
@@ -125,21 +125,23 @@ class LoginPage extends Component {
 	        hidden='true'
 	        size='large'/> ) :
 	    ( <View/>);
- 			
+ 
 	    return (
  			<View style={styles.container}><Image source={require('image!rclogo')} style={styles.image}/>
-	        <Text style={styles.description}>
-	          Recurse Center!
-	        </Text>
-			<TouchableHighlight style={styles.button}
-			      underlayColor='#99d9f4'
-	          	  onPress={this.onLoginPressed.bind(this)}>
-			    <Text style={styles.buttonText}>Login</Text>
-			 </TouchableHighlight>
-			{spinner}
+        <Text style={styles.description}>
+          Recurse Center!
+        </Text>
+				<TouchableHighlight
+				  style={styles.button}
+				  underlayColor='#99d9f4'
+		      onPress={this.onLoginPressed.bind(this)}
+		    >
+				  <Text style={styles.buttonText}>Login</Text>
+				</TouchableHighlight>
+				{spinner}
+			</View>
 		);
 	}
-}	
-
+}
  
 module.exports = LoginPage;

@@ -1,9 +1,8 @@
 'use strict';
-
+ 
 var React = require('react-native');
-//var LoginPage = require('./LoginPage');
-var SearchPage = require('./SearchPage');
-
+var MainPage = require('./MainPage');
+ 
 var styles = React.StyleSheet.create({
   text: {
     color: 'black',
@@ -15,8 +14,10 @@ var styles = React.StyleSheet.create({
     flex: 1
   }
 });
-
+ 
 class RecurseCenterApp extends React.Component {
+ 
+ 
   render() {
     return (
       <React.NavigatorIOS
@@ -24,11 +25,10 @@ class RecurseCenterApp extends React.Component {
         initialRoute={{
           title: 'RC Finder',
           backButtonTitle: 'Back',
-          rightButtonTitle: 'Home',
-          component: SearchPage
+          component: MainPage
         }}/>
     );
   }
 }
-
+ 
 React.AppRegistry.registerComponent('rcapp', function() { return RecurseCenterApp });

@@ -71,9 +71,9 @@ class SearchResults extends Component {
         <View style={styles.rowContainer}>
           <Image style={styles.thumb} source={{ uri: rowData.image }} />
           <View  style={styles.textContainer}>
-            <Text style={styles.title}>{this.props.results.first_name}</Text>
-            <Text style={styles.batch} 
-                  numberOfLines={1}>{rowData.batch}</Text>
+            <Text style={styles.price}>{rowData.first_name} {rowData.last_name}</Text>
+            <Text style={styles.title} 
+                  numberOfLines={1}>{rowData.batch.name}</Text>
           </View>
         </View>
         <View style={styles.separator}/>

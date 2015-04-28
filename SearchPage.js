@@ -1,10 +1,10 @@
 'use strict';
-
+ 
 var React = require('react-native');
 var SearchResults = require('./SearchResults');
 var allPeople = require('./allPeople');
 var batches = require('./batches');
-
+ 
 var {
   StyleSheet,
   Text,
@@ -15,7 +15,7 @@ var {
   Image,
   Component
 } = React;
-
+ 
 var styles = StyleSheet.create({
   description: {
     marginBottom: 20,
@@ -66,9 +66,9 @@ var styles = StyleSheet.create({
     height: 130
   }
 });
-
+ 
 class SearchPage extends Component {
-
+ 
   constructor(props) {
     super(props);
     this.state = {
@@ -78,7 +78,7 @@ class SearchPage extends Component {
       results: null
     };
   }
-
+ 
   _handleResponse() {
     var searchStr = this.state.searchString;
     var Results = []
@@ -88,8 +88,8 @@ class SearchPage extends Component {
       //console.log(people)
       if (searchStr == people.first_name || searchStr == people.last_name || searchStr == people.job || searchStr == people.skills) {
           console.log('!!!!!!!')
-          Results.push(people)    
-      } 
+          Results.push(people)
+      }
     })
     this.setState({results: Results})
     console.log(this.state.results)
@@ -99,7 +99,7 @@ class SearchPage extends Component {
       passProps: {results: this.state.results}
     })
   }
-
+ 
   _executeQuery(query) {
     this.setState({ isLoading: true, message: '' });
     fetch(query)
@@ -112,31 +112,32 @@ class SearchPage extends Component {
         });
       });
   }
-
+ 
   onSearchPressed() {
     var query = urlForQueryAndPage('place_name', this.state.searchString, 1);
     this._executeQuery(query);
   }
-
+ 
   onSearchTextChanged(event) {
     this.setState({ searchString: event.nativeEvent.text });
   }
-
+ 
   render() {
     var spinner = this.state.isLoading ?
       ( <ActivityIndicatorIOS
           hidden='true'
           size='large'/> ) :
       ( <View/>);
-
+ 
     return (
       <View style={styles.container}>
         <Image source={require('image!rclogo')} style={styles.image}/>
+        <Text>Your token is {this.props.token}</Text>
         <View style={styles.flowRight}>
           <TextInput
             style={styles.searchInput}
             placeholder='Search via companies, skills, projects etc.'
-            value={this.state.searchString}
+            value={this.props.searchString}
             onChange={this.onSearchTextChanged.bind(this)}/>
           <TouchableHighlight style={styles.button}
               underlayColor='#99d9f4'
@@ -150,5 +151,5 @@ class SearchPage extends Component {
     );
   }
 }
-
+ 
 module.exports = SearchPage;
