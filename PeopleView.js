@@ -46,25 +46,21 @@ class PeopleView extends Component {
  
   render() {
     var people = this.props.people;
-    var stats = people.email + ' bed ' + people.phone_number;
+    var stats = people.email + ' ' + people.phone_number;
     if (people.phone_number) {
-      stats += ', ' + people.phone_number + ' ' + (people.phone_number > 1
-        ? 'bathrooms' : 'bathroom');
+      stats += ', ' + people.phone_number + ' ';
     }
- 
-    var price = people.price_formatted.split(' ')[0];
- 
+  
     return (
       <View style={styles.container}>
         <Image style={styles.image} 
-            source={{uri: people.imgage}} />
+            source={{uri: people.image}} />
         <View style={styles.heading}>
-          <Text style={styles.price}>{price}</Text>
-          <Text style={styles.title}>{price.title}</Text>
+          <Text style={styles.price}>{people.first_name} {people.last_name}</Text>
+          <Text style={styles.title}>{people.batch.name}</Text>
           <View style={styles.separator}/>
         </View>
         <Text style={styles.description}>{stats}</Text>
-        <Text style={styles.description}>{price.summary}</Text>
       </View>
     );
   }

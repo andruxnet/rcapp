@@ -1,7 +1,5 @@
 'use strict';
 
-//REMEMBER TO CHANGE '_handleRespone' back to 'onSearchPressed'
-
 var React = require('react-native');
 var SearchResults = require('./SearchResults');
 var allPeople = require('./allPeople');

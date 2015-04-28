@@ -53,11 +53,11 @@ class SearchResults extends Component {
   }
 
   rowPressed(peopleGuid) {
-    var people = this.props.listings.filter(prop => prop.guid === peopleGuid)[0];
+    var people = this.props.results.filter(prop => prop.guid === peopleGuid)[0];
    
     this.props.navigator.push({
-      title: "Property",
-      component: PropertyView,
+      title: "People",
+      component: PeopleView,
       passProps: {people: people}
     });
   }
