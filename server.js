@@ -43,10 +43,10 @@ app.get('/allpeople', function(req, res){
     client.batches.people(id)
     .then(function(people){ 
       allPeople.push(people);
-      res.send(allPeople);
+      console.log(people)
+      res.send(people)
     })
   })
-  console.log(allPeople);
 })
 
 app.get('/people/me', function(req, res){
@@ -66,12 +66,11 @@ app.get('/people/:person_id', function(req, res){
 app.get('/batches', function(req, res){
   client.batches.list()
   .then(function(batches) {
-    for (var key in batches) {
-      allBatches.push(batches[key].id);
-    }
-    //console.log(allBatches);
-    res.send(batches);
-  });
+    batches.forEach(function(batch){
+      allBatches.push(batch)
+    });
+    res.send(allBatches)     
+  }) 
 })
 
 app.get('/batches/:batch_id', function(req, res){
@@ -81,12 +80,14 @@ app.get('/batches/:batch_id', function(req, res){
   });
 })
 
-app.get('/batches/:batch_id/people', function(req, res){  
+app.get('/batches/:batch_id/people', function(req, res){ 
   client.batches.people(req.params.batch_id)
   .then(function(people) {
     res.send(people);
   });
 })
+
+
 
 app.listen(3000);
 console.log('Live');

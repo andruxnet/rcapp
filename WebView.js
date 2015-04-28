@@ -1,212 +1,134 @@
-'use strict';
-
+'use strict'
+ 
 var React = require('react-native');
-var StyleSheet = require('StyleSheet');
+var SearchPage = require('./SearchPage');
+ 
+ 
 var {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
+  TouchableHighlight,
+  Image,
+  Component,
+  LinkingIOS,
   WebView
 } = React;
-
-var HEADER = '#3b5998';
-var BGWASH = 'rgba(255,255,255,0.8)';
-var DISABLED_WASH = 'rgba(255,255,255,0.25)';
-
+ 
+var styles = StyleSheet.create({
+  description: {
+    marginBottom: 20,
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#656565'
+  },
+  web_view_container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  container: {
+    padding: 30,
+    marginTop: 65,
+    alignItems: 'center'
+  },
+  flowRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+  },
+  button: {
+    height: 36,
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#48BBEC',
+    borderColor: '#48BBEC',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  },
+  searchInput: {
+    height: 36,
+    padding: 4,
+    marginRight: 5,
+    flex: 4,
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: '#48BBEC',
+    borderRadius: 8,
+    color: '#48BBEC'
+  },
+    image: {
+    width: 110,
+    height: 130
+  },
+});
+ 
 var auth = {
   client_id: 'b203868ed8d57486a3806dffff75729aff20e01a264121fd6de24a45d2f5246b',
   client_secret: 'b3c5a9991f9f3d4b5b20870a60d3abd4f7debdf4d98e407cd341a008f854bfb2',
   redirect_uri: 'rcapp://complete'
 }
+ 
+class WebView extends Component {
 
-var TEXT_INPUT_REF = 'urlInput';
-var WEBVIEW_REF = 'webview';
-var DEFAULT_URL = 'https://www.hackerschool.com';
-
-var WebViewExample = React.createClass({
-
-  getInitialState: function() {
-    return {
-      url: DEFAULT_URL,
-      status: 'No Page Loaded',
-      backButtonEnabled: false,
-      forwardButtonEnabled: false,
-      loading: true,
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: '',
+      isLoading: false,
+      authCode: null,
+      authCodeRequested: false
     };
-  },
-
-  inputText: '',
-
-  handleTextInputChange: function(event) {
-    this.inputText = event.nativeEvent.text;
-  },
-
-  render: function() {
-    this.inputText = this.state.url;
-
-    return (
-      <View style={[styles.container]}>
-        <View style={[styles.addressBarRow]}>
-          <TouchableOpacity onPress={this.goBack}>
-            <View style={this.state.backButtonEnabled ? styles.navButton : styles.disabledButton}>
-              <Text>
-                 {'<'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.goForward}>
-            <View style={this.state.forwardButtonEnabled ? styles.navButton : styles.disabledButton}>
-              <Text>
-                {'>'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TextInput
-            ref={TEXT_INPUT_REF}
-            autoCapitalize="none"
-            value={this.state.url}
-            onSubmitEditing={this.onSubmitEditing}
-            onChange={this.handleTextInputChange}
-            clearButtonMode="while-editing"
-            style={styles.addressBarTextInput}
-          />
-          <TouchableOpacity onPress={this.pressGoButton}>
-            <View style={styles.goButton}>
-              <Text>
-                 Go!
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <WebView
-          ref={WEBVIEW_REF}
-          automaticallyAdjustContentInsets={false}
-          style={styles.webView}
-          url={this.state.url}
-          onNavigationStateChange={this.onNavigationStateChange}
-          startInLoadingState={true}
-        />
-        <View style={styles.statusBar}>
-          <Text style={styles.statusBarText}>{this.state.status}</Text>
-        </View>
-      </View>
-    );
-  },
-
-  goBack: function() {
-    this.refs[WEBVIEW_REF].goBack();
-  },
-
-  goForward: function() {
-    this.refs[WEBVIEW_REF].goForward();
-  },
-
-  reload: function() {
-    this.refs[WEBVIEW_REF].reload();
-  },
-
-  onNavigationStateChange: function(navState) {
-    this.setState({
-      backButtonEnabled: navState.canGoBack,
-      forwardButtonEnabled: navState.canGoForward,
-      url: navState.url,
-      status: navState.title,
-      loading: navState.loading,
-    });
-  },
-
-  onSubmitEditing: function(event) {
-    this.pressGoButton();
-  },
-
-  pressGoButton: function() {
-    var url = this.inputText.toLowerCase();
-    if (url === this.state.url) {
-      this.reload();
-    } else {
-      this.setState({
-        url: url,
-      });
+  }
+ 
+  componentDidMount() {
+    LinkingIOS.addEventListener('url', this._handleOpenURL);
+  }
+ 
+  onUserTextChanged(event) {
+    console.log('onLoginchanged');
+    this.setState({ userString: event.nativeEvent.text});
+    console.log(this.state.userString);
+  }
+  
+  onWebViewChange(param){
+    var codeReg = new RegExp(/rcapp:\/\/complete\?code=(.+)$/);
+    var codeMatch = param.url.match(codeReg)
+    if (codeMatch) {
+      console.log('YOUR CODE: '+ codeMatch[1])
+      this.setState({authCode: codeMatch[1]})
     }
-    // dismiss keyoard
-    this.refs[TEXT_INPUT_REF].blur();
-  },
+    return _onViewChange(this.state.authCode)
+  }
 
-});
+  _onViewChange(authCode) {
+    this.props.navigator.push({
+      title: 'Search Page',
+      component: SearchPage,
+      passProps: authCode
+    })
+  }
+ 
+  render() {
+      console.log('WebView.render');
+ 
+      return (
+          <View style={styles.web_view_container}>
+            <WebView
+              startInLoadingState={true}
+              onNavigationStateChange={this.onWebViewChange.bind(this)}
+              url={"https://www.recurse.com/oauth/authorize?response_type=code&client_id="+auth.client_id+"&redirect_uri="+auth.redirect_uri}
+             />
+          </View>)
+  }
+}    
 
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: HEADER,
-  },
-  addressBarRow: {
-    flexDirection: 'row',
-    padding: 8,
-  },
-  webView: {
-    backgroundColor: BGWASH,
-    height: 350,
-  },
-  addressBarTextInput: {
-    backgroundColor: BGWASH,
-    borderColor: 'transparent',
-    borderRadius: 3,
-    borderWidth: 1,
-    height: 24,
-    paddingLeft: 10,
-    paddingTop: 3,
-    paddingBottom: 3,
-    flex: 1,
-    fontSize: 14,
-  },
-  navButton: {
-    width: 20,
-    padding: 3,
-    marginRight: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: BGWASH,
-    borderColor: 'transparent',
-    borderRadius: 3,
-  },
-  disabledButton: {
-    width: 20,
-    padding: 3,
-    marginRight: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: DISABLED_WASH,
-    borderColor: 'transparent',
-    borderRadius: 3,
-  },
-  goButton: {
-    height: 24,
-    padding: 3,
-    marginLeft: 8,
-    alignItems: 'center',
-    backgroundColor: BGWASH,
-    borderColor: 'transparent',
-    borderRadius: 3,
-    alignSelf: 'stretch',
-  },
-  statusBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 5,
-    height: 22,
-  },
-  statusBarText: {
-    color: 'white',
-    fontSize: 13,
-  },
-  spinner: {
-    width: 20,
-    marginRight: 6,
-  },
-});
-
-exports.title = '<WebView>';
-exports.description = 'Base component to display web content';
-module.exports = WebViewExample
+module.exports = WebView;

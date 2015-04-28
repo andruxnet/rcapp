@@ -2,6 +2,7 @@
  
 var React = require('react-native');
 var SearchPage = require('./SearchPage');
+var WebView = require('./WebView')
  
  
 var {
@@ -71,12 +72,6 @@ var styles = StyleSheet.create({
 	},
 });
  
-var auth = {
-	client_id: 'b203868ed8d57486a3806dffff75729aff20e01a264121fd6de24a45d2f5246b',
-	client_secret: 'b3c5a9991f9f3d4b5b20870a60d3abd4f7debdf4d98e407cd341a008f854bfb2',
-	redirect_uri: 'rcapp://complete'
-}
- 
 class LoginPage extends Component {
  
 	constructor(props) {
@@ -84,7 +79,6 @@ class LoginPage extends Component {
 		this.state = {
 			message: '',
 			isLoading: false,
-			authCode: null,
 			authCodeRequested: false
 		};
 	}
@@ -99,12 +93,6 @@ class LoginPage extends Component {
 		console.log(this.state.userString);
 	}
  
-	onPassTextChanged(event) {
-		console.log('onLoginchanged');
-		this.setState({ passString: event.nativeEvent.text});
-		console.log(this.state.passString);
-	}
- 
 	_executeLogin(login) {
 		console.log(login);
 		this.setState({ isLoading: true, authCodeRequested: true });
@@ -112,6 +100,10 @@ class LoginPage extends Component {
  
 	onLoginPressed() {
 		this.setState({authCodeRequested: true})
+		this.props.navigator.push({
+			title: 'WebView',
+			component: WebView
+		})
 		// fetch("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")")
 		//   .then(response =>
 		//     this.setState({isLoading: false, loginHtml: response['_bodyText']}))
@@ -124,20 +116,6 @@ class LoginPage extends Component {
 		//LinkingIOS.openURL("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")");
 	}
  
-	_handleResponse(response) {
-	  var allpeople = response;
-	  console.log(allpeople.length);
-	}
- 
-	onWebViewChange(param){
-		var codeReg = new RegExp(/rcapp:\/\/complete\?code=(.+)$/);
-		var codeMatch = param.url.match(codeReg)
-		if (codeMatch) {
-			console.log('YOUR CODE: '+ codeMatch[1])
-			this.setState({authCode: codeMatch[1]})
-		}
-	}
- 
  
 	render() {
 	    console.log('SearchPage.render');
@@ -147,19 +125,9 @@ class LoginPage extends Component {
 	        hidden='true'
 	        size='large'/> ) :
 	    ( <View/>);
- 
-	    var currentView;
-	    if(this.state.authCodeRequested && !this.state.authCode) {
-        currentView =
-          <View style={styles.web_view_container}>
-            <WebView
-              startInLoadingState={true}
-              onNavigationStateChange={this.onWebViewChange.bind(this)}
-              url={"https://www.recurse.com/oauth/authorize?response_type=code&client_id="+auth.client_id+"&redirect_uri="+auth.redirect_uri}
-             />
-          </View>
-	    } else {
-          currentView = <View style={styles.container}><Image source={require('image!rclogo')} style={styles.image}/>
+ 			
+	    return (
+ 			<View style={styles.container}><Image source={require('image!rclogo')} style={styles.image}/>
 	        <Text style={styles.description}>
 	          Recurse Center!
 	        </Text>
@@ -169,11 +137,9 @@ class LoginPage extends Component {
 			    <Text style={styles.buttonText}>Login</Text>
 			 </TouchableHighlight>
 			{spinner}
-			<Text style={styles.description}>{this.state.authCode}</Text></View>
-	    }
- 
-	    return currentView;
-	  }
+		);
 	}
+}	
+
  
 module.exports = LoginPage;

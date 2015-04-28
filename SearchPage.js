@@ -1,6 +1,11 @@
 'use strict';
- 
+
+//REMEMBER TO CHANGE '_handleRespone' back to 'onSearchPressed'
+
 var React = require('react-native');
+var SearchResults = require('./SearchResults');
+var allPeople = require('./allPeople');
+var batches = require('./batches');
 
 var {
   StyleSheet,
@@ -26,10 +31,10 @@ var styles = StyleSheet.create({
     alignItems: 'center'
   },
   flowRight: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  alignSelf: 'stretch'
-},
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
   buttonText: {
     fontSize: 18,
     color: 'white',
@@ -59,66 +64,90 @@ var styles = StyleSheet.create({
     color: '#48BBEC'
   },
   image: {
-  width: 110,
-  height: 130
-  },
+    width: 110,
+    height: 130
+  }
 });
-
 
 class SearchPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      searchString: 'Haskell',
-      isLoading: false
+      searchString: null,
+      isLoading: false,
+      message: '',
+      results: null
     };
   }
 
-  onSearchTextChanged(event) {
-    console.log('onSearchTextChanged');
-    this.setState({ searchString: event.nativeEvent.text });
-    console.log(this.state.searchString);
+  _handleResponse() {
+    var searchStr = this.state.searchString;
+    var Results = []
+    this.setState({ isLoading: false });
+    console.log(searchStr)
+    allPeople.forEach(function(people){
+      //console.log(people)
+      if (searchStr == people.first_name || searchStr == people.last_name || searchStr == people.job || searchStr == people.skills) {
+          console.log('!!!!!!!')
+          Results.push(people)    
+      } 
+    })
+    this.setState({results: Results})
+    console.log(this.state.results)
+    this.props.navigator.push({
+      title: 'Results',
+      component: SearchResults,
+      passProps: {results: this.state.results}
+    })
   }
 
   _executeQuery(query) {
-    console.log(query);
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, message: '' });
+    fetch(query)
+      .then(response => response.json())
+      .then(json => this._handleResponse(json.response))
+      .catch(error => {
+        this.setState({
+          isLoading: false,
+          message: 'Something bad happened ' + error
+        });
+      });
   }
-   
+
   onSearchPressed() {
     var query = urlForQueryAndPage('place_name', this.state.searchString, 1);
     this._executeQuery(query);
   }
 
-  render() {
-    console.log('SearchPage.render');
+  onSearchTextChanged(event) {
+    this.setState({ searchString: event.nativeEvent.text });
+  }
 
+  render() {
     var spinner = this.state.isLoading ?
-    ( <ActivityIndicatorIOS
-        hidden='true'
-        size='large'/> ) :
-    ( <View/>);
+      ( <ActivityIndicatorIOS
+          hidden='true'
+          size='large'/> ) :
+      ( <View/>);
 
     return (
       <View style={styles.container}>
-      <Image source={require('image!rclogo')} style={styles.image}/>
-        <Text style={styles.description}>
-          Recurse Center!
-        </Text>
-      <View style={styles.flowRight}>
-		  <TextInput
-		    style={styles.searchInput}
-        value={this.state.searchString}
-        onChange={this.onSearchTextChanged.bind(this)}
-        placeholder='Search via batch #, skill, job etc.'/>
-		  <TouchableHighlight style={styles.button}
-		      underlayColor='#99d9f4'
-          onPress={this.onSearchPressed.bind(this)}>
-		    <Text style={styles.buttonText}>Search</Text>
-		  </TouchableHighlight>
-      {spinner}
-		</View>
+        <Image source={require('image!rclogo')} style={styles.image}/>
+        <View style={styles.flowRight}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder='Search via companies, skills, projects etc.'
+            value={this.state.searchString}
+            onChange={this.onSearchTextChanged.bind(this)}/>
+          <TouchableHighlight style={styles.button}
+              underlayColor='#99d9f4'
+              onPress={this._handleResponse.bind(this)}>
+            <Text style={styles.buttonText}>Search</Text>
+          </TouchableHighlight>
+        </View>
+        {spinner}
+        <Text style={styles.description}>{this.state.message}</Text>
       </View>
     );
   }
