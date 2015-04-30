@@ -7,9 +7,9 @@ var SearchPage = require('./SearchPage');
 var {
   Component,
 } = React;
-
+ 
 var allpeople = [];
-
+ 
 exports.allPeople = function() {
   var flattened = allpeople.reduceRight(function(a, b) {
     return a.concat(b);
@@ -29,17 +29,17 @@ class MainPage extends Component {
   }
  
   obtainToken(token) {
-    console.log('here', token);
-    console.log(this)
     this.setState({token: token});
-    this.props.navigator.resetTo({
-      title: 'Search',
-      component: SearchPage,
-      passProps: {token: token}
-    });
-    //this._executeQuery(this.state.token);
+    setTimeout(()=> {
+      this.props.navigator.resetTo({
+        title: 'Search',
+        component: SearchPage,
+        passProps: {token: token}
+      });
+      this._executeQuery(token);
+    }, 200)
   }
-
+ 
   _executeQuery(token) {
     var x = 18
     while (x > 0) {
@@ -48,11 +48,11 @@ class MainPage extends Component {
       .then(json => this._handleResponse(json))
       .catch(error => {
         console.log('error: ' + error)
-    }); 
+    });
       x--;
-    } 
+    }
   }
-
+ 
   _handleResponse(response) {
   allpeople.push(response);
   //console.log(allPeople[0]);

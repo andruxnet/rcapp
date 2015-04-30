@@ -91,7 +91,7 @@ class SearchPage extends Component {
       }
     })
     this.setState({results: Results})
-    console.log(Results)
+    //console.log(Results)
     this.props.navigator.push({
       title: 'Results',
       component: SearchResults,

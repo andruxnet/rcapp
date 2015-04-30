@@ -53,9 +53,9 @@ class SearchResults extends Component {
   }
 
   rowPressed(peopleid) {
-    var people = this.props.results.filter(prop => prop.id === peopleid);
+    var people = this.props.results.filter(prop => prop.id === peopleid)[0];
 
-    console.log(people)
+    //console.log(people)
    
     this.props.navigator.push({
       title: "People",

@@ -104,27 +104,26 @@ class LoginWebView extends Component {
     if (codeMatch) {
       console.log('YOUR CODE: '+ codeMatch[1])
       this.obtainToken(codeMatch[1])
-      param.url = "google.com"
+      return false
     }
   }
  
-  onRenderError(param) {return this.props.onCodeObtain("test");}
+  onRenderError(param) {}
  
   obtainToken(code) {
     fetch('https://www.recurse.com/oauth/token?client_id='+auth.client_id+'&client_secret='+auth.client_secret+'&grant_type=authorization_code&code='+code+'&redirect_uri='+auth.redirect_uri, {
       method: 'post'
     })
-    //.then(response => console.log(response))
     .then(response => response.json())
     .then(json => this._handleResponse(json.access_token))
     .catch(error => {
-        console.log('errors: ' + error)
+      console.log('errors: ' + error)
     });
   }
  
   _handleResponse(token) {
     console.log('token: ', token);
-    return this.props.onCodeObtain(token);
+    return this.props.onCodeObtain(token)
   }
  
   render() {
@@ -135,7 +134,7 @@ class LoginWebView extends Component {
           <WebView
             startInLoadingState={true}
             onNavigationStateChange={this.onWebViewChange.bind(this)}
-            //renderError={this.onRenderError.bind(this)}
+            renderError={this.onRenderError.bind(this)}
             url={"https://www.recurse.com/oauth/authorize?response_type=code&client_id="+auth.client_id+"&redirect_uri="+auth.redirect_uri}
           />
         </View>
