@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>F867B3D9-7AEF-4BBF-A42C-24926DEB347B</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>rcapp</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>C7BDAAB113B7E97AE3F6918E74A8454DCBB0D8BD</key>
 		<string>github.com:rahul1346/rcapp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>rcapp.xcodeproj/project.xcworkspace</string>
+	<string>rcapp.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>C7BDAAB113B7E97AE3F6918E74A8454DCBB0D8BD</key>

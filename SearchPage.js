@@ -100,19 +100,6 @@ class SearchPage extends Component {
     })
   }
  
-  _executeQuery(query) {
-    this.setState({ isLoading: true, message: '' });
-    fetch(query)
-      .then(response => response.json())
-      .then(json => this._handleResponse(json.response))
-      .catch(error => {
-        this.setState({
-          isLoading: false,
-          message: 'Something bad happened ' + error
-        });
-      });
-  }
- 
   onSearchPressed() {
     var query = urlForQueryAndPage('place_name', this.state.searchString, 1);
     this._executeQuery(query);
@@ -132,7 +119,6 @@ class SearchPage extends Component {
     return (
       <View style={styles.container}>
         <Image source={require('image!rclogo')} style={styles.image}/>
-        <Text>Your token is {this.props.token}</Text>
         <View style={styles.flowRight}>
           <TextInput
             style={styles.searchInput}

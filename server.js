@@ -30,8 +30,7 @@ app.get('/login/complete', function(req, res) {
   .then(function(token) {
     // tells the client instance to use this token for all requests
     client.setToken(token);
-    res.send('Got a token!');
-    //console.log(token);
+    res.send(token);
   }, function(err) {
     res.send('There was an error getting the token');
   });

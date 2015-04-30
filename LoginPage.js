@@ -104,16 +104,6 @@ class LoginPage extends Component {
 			component: LoginWebView,
 			passProps: { onCodeObtain: this.props.onTokenGet }
 		})
-		// fetch("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")")
-		//   .then(response =>
-		//     this.setState({isLoading: false, loginHtml: response['_bodyText']}))
- 
-		//   .catch(error =>
-		//      this.setState({
-		//       isLoading: false,
-		//       message: 'Something bad happened ' + error
-		//    }));
-		//LinkingIOS.openURL("https://www.hackerschool.com/oauth/authorize?response_type=code&client_id=("+auth.client_id+")&redirect_uri=("+auth.redirect_uri+")");
 	}
  
  

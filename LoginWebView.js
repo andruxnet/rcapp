@@ -102,8 +102,25 @@ class LoginWebView extends Component {
     var codeMatch = param.url.match(codeReg)
     if (codeMatch) {
       console.log('YOUR CODE: '+ codeMatch[1])
-      return this.props.onCodeObtain(codeMatch[1])
+      this.obtainToken(codeMatch[1])
     }
+  }
+
+  obtainToken(code) {
+    fetch('https://www.recurse.com/oauth/token?client_id='+auth.client_id+'&client_secret='+auth.client_secret+'&grant_type=authorization_code&code='+code+'&redirect_uri='+auth.redirect_uri, {
+      method: 'post'
+    })
+    .then(response => response.json())
+    .then(json => this._handleResponse(json.access_token))
+    .catch(error => {
+        console.log('errors: ' + error)
+    });
+  
+  }
+
+  _handleResponse(token) {
+  console.log('token: ', token);
+  return this.props.onCodeObtain(token); 
   }
  
   render() {
