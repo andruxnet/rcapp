@@ -46,6 +46,7 @@ class PeopleView extends Component {
  
   render() {
     var people = this.props.people;
+    console.log(people);
     var stats = people.email + ' ' + (people.phone_number ? people.phone_number : '');
     
   
@@ -59,6 +60,9 @@ class PeopleView extends Component {
           <View style={styles.separator}/>
         </View>
         <Text style={styles.description}>{stats}</Text>
+        <Text style={styles.description}>Job: {people.job}</Text>
+        <Text style={styles.description}>Skills: {people.skills}</Text>
+        <Text style={styles.description}>{people.bio}</Text>
       </View>
     );
   }

@@ -81,12 +81,14 @@ class SearchPage extends Component {
   _handleResponse() {
     var searchStr = this.state.searchString;
     var Results = []
+    var Skills = []
     this.setState({ isLoading: false });
     console.log(searchStr)
     MainPage.allPeople().forEach(function(people){
       //console.log(people)
-      if (searchStr == people.first_name || searchStr == people.last_name || searchStr == people.job || searchStr == people.skills) {
-          console.log('!!!!!!!')
+
+      if (searchStr == people.first_name || searchStr == people.last_name || searchStr == people.job || people.skills.some(function(x) { return searchStr == x })) {
+          //console.log('!!!!!!!')
           Results.push(people)
       }
     })
