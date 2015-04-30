@@ -30,18 +30,17 @@ class MainPage extends Component {
   }
 
   _executeQuery(token) {
-    this.setState({ message: '' });
     fetch('https://www.recurse.com/api/v1/people/me?access_token='+token)
-      .then(response => console.log(response))
+      // .then(response => console.log(response))
       .then(response => response.json())
-      .then(json => this._handleResponse(json.response))
+      .then(json => this._handleResponse(json))
       .catch(error => {
         console.log('error: ' + error)
     });  
   }
 
   _handleResponse(response) {
-  console.log('!!!!!!!!'); 
+  console.log('!!!!!!!!', response); 
   }
  
   render() {
