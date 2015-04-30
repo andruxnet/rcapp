@@ -30,13 +30,14 @@ class MainPage extends Component {
  
   obtainToken(token) {
     console.log('here', token);
+    console.log(this)
     this.setState({token: token});
     this.props.navigator.resetTo({
       title: 'Search',
       component: SearchPage,
-      passProps: {token: this.state.token}
+      passProps: {token: token}
     });
-    this._executeQuery(this.state.token);
+    //this._executeQuery(this.state.token);
   }
 
   _executeQuery(token) {
