@@ -2,8 +2,7 @@
  
 var React = require('react-native');
 var SearchResults = require('./SearchResults');
-var allPeople = require('./allPeople');
-var batches = require('./batches');
+var MainPage = require('./MainPage');
  
 var {
   StyleSheet,
@@ -84,7 +83,7 @@ class SearchPage extends Component {
     var Results = []
     this.setState({ isLoading: false });
     console.log(searchStr)
-    allPeople.forEach(function(people){
+    MainPage.allPeople().forEach(function(people){
       //console.log(people)
       if (searchStr == people.first_name || searchStr == people.last_name || searchStr == people.job || searchStr == people.skills) {
           console.log('!!!!!!!')
@@ -92,7 +91,7 @@ class SearchPage extends Component {
       }
     })
     this.setState({results: Results})
-    console.log(this.state.results)
+    console.log(Results)
     this.props.navigator.push({
       title: 'Results',
       component: SearchResults,

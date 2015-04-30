@@ -46,14 +46,16 @@ class SearchResults extends Component {
   constructor(props) {
     super(props);
     var dataSource = new ListView.DataSource(
-      {rowHasChanged: (r1, r2) => r1.guid !== r2.guid});
+      {rowHasChanged: (r1, r2) => r1.id !== r2.id});
     this.state = {
       dataSource: dataSource.cloneWithRows(this.props.results)
     };
   }
 
-  rowPressed(peopleGuid) {
-    var people = this.props.results.filter(prop => prop.guid === peopleGuid)[0];
+  rowPressed(peopleid) {
+    var people = this.props.results.filter(prop => prop.id === peopleid);
+
+    console.log(people)
    
     this.props.navigator.push({
       title: "People",
@@ -65,7 +67,7 @@ class SearchResults extends Component {
 
   renderRow(rowData, sectionID, rowID) {
      return (
-    <TouchableHighlight onPress={() => this.rowPressed(rowData.guid)}
+    <TouchableHighlight onPress={() => this.rowPressed(rowData.id)}
         underlayColor='#dddddd'>
       <View>
         <View style={styles.rowContainer}>

@@ -7,6 +7,16 @@ var SearchPage = require('./SearchPage');
 var {
   Component,
 } = React;
+
+var allpeople = [];
+
+exports.allPeople = function() {
+  var flattened = allpeople.reduceRight(function(a, b) {
+    return a.concat(b);
+  }, []);
+  //console.log(allpeople.length)
+  return flattened;
+}
  
 class MainPage extends Component {
   constructor(props) {
@@ -30,17 +40,21 @@ class MainPage extends Component {
   }
 
   _executeQuery(token) {
-    fetch('https://www.recurse.com/api/v1/people/me?access_token='+token)
-      // .then(response => console.log(response))
+    var x = 18
+    while (x > 0) {
+    fetch('https://www.recurse.com//api/v1/batches/'+x+'/people?access_token='+token)
       .then(response => response.json())
       .then(json => this._handleResponse(json))
       .catch(error => {
         console.log('error: ' + error)
-    });  
+    }); 
+      x--;
+    } 
   }
 
   _handleResponse(response) {
-  console.log('!!!!!!!!', response); 
+  allpeople.push(response);
+  //console.log(allPeople[0]);
   }
  
   render() {
