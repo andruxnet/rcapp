@@ -6,12 +6,20 @@ var {
   Image, 
   View,
   Text,
+  ListView,
+  LinkingIOS,
+  TouchableHighlight,
   Component
 } = React;
 
 var styles = StyleSheet.create({
   container: {
     marginTop: 65
+  },
+  link: {
+    fontSize: 18,
+    margin: 5,
+    color: '#0000EE'
   },
   heading: {
     backgroundColor: '#F8F8F8',
@@ -43,13 +51,28 @@ var styles = StyleSheet.create({
 });
 
 class PeopleView extends Component {
- 
-  render() {
-    var people = this.props.people;
-    console.log(people);
-    var stats = people.email + ' ' + (people.phone_number ? people.phone_number : '');
-    
+
+  constructor(props) {
+    super(props);
+    var dataSource = new ListView.DataSource(
+      {rowHasChanged: (r1, r2) => r1.id !== r2.id});
+    this.state = {
+      dataSource: dataSource.cloneWithRows(this.props.people)
+    };
+  }
+
+  onEmailPressed() {
+    LinkingIOS.openURL("mailto:"+this.props.people.email);
+  }
+
+  onTelPressed() {
+    LinkingIOS.openURL("tel:"+this.props.people.phone_number);
+  }
   
+  renderRow(rowData, sectionID, rowID) {
+    var people = this.props.people;
+    console.log(rowData);
+    var number = (people.phone_number ? people.phone_number : '');
     return (
       <View style={styles.container}>
         <Image style={styles.image} 
@@ -59,11 +82,32 @@ class PeopleView extends Component {
           <Text style={styles.title}>{people.batch.name}</Text>
           <View style={styles.separator}/>
         </View>
-        <Text style={styles.description}>{stats}</Text>
+        <TouchableHighlight
+          style={styles.link}
+          underlayColor='#99d9f4'
+          onPress={this.onEmailPressed.bind(this)}
+        >
+        <Text style={styles.link}>Email: {people.email}</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={styles.link}
+          underlayColor='#99d9f4'
+          onPress={this.onTelPressed.bind(this)}
+        >
+        <Text style={styles.link}>Tel: {number}</Text>
+        </TouchableHighlight>
         <Text style={styles.description}>Job: {people.job}</Text>
         <Text style={styles.description}>Skills: {people.skills}</Text>
-        <Text style={styles.description}>{people.bio}</Text>
+        <Text style={styles.description}>Bio: {people.bio}</Text>
       </View>
+    );
+  }
+ 
+  render() {
+    return (
+      <ListView
+        dataSource={this.state.dataSource}
+        renderRow={this.renderRow.bind(this)}/>
     );
   }
 }

@@ -125,7 +125,7 @@ class LoginPage extends Component {
 				  style={styles.button}
 				  underlayColor='#99d9f4'
 		      onPress={this.onLoginPressed.bind(this)}
-		    >
+		    	>
 				  <Text style={styles.buttonText}>Login</Text>
 				</TouchableHighlight>
 				{spinner}
