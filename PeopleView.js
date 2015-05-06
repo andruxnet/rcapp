@@ -71,8 +71,9 @@ class PeopleView extends Component {
   
   renderRow(rowData, sectionID, rowID) {
     var people = this.props.people;
-    console.log(rowData);
     var number = (people.phone_number ? people.phone_number : '');
+    console.log(arguments)
+
     return (
       <View style={styles.container}>
         <Image style={styles.image} 
