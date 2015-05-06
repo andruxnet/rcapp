@@ -82,23 +82,26 @@ class SearchPage extends Component {
     var searchStr = this.state.searchString;
     var Results = []
     var Skills = []
-    this.setState({ isLoading: false });
     console.log(searchStr)
     MainPage.allPeople().forEach(function(people){
       //console.log(people)
-
       if (searchStr == people.first_name || searchStr == people.last_name || searchStr == people.job || people.skills.some(function(x) { return searchStr == x })) {
           //console.log('!!!!!!!')
           Results.push(people)
-      }
+      } 
     })
-    this.setState({results: Results})
-    //console.log(Results)
-    this.props.navigator.push({
-      title: 'Results',
-      component: SearchResults,
-      passProps: {results: this.state.results}
-    })
+    if (Results.length == 0) {
+        this.setState({ message: 'Search not recognized; please try again.'});
+    } else {
+      this.setState({results: Results})
+      this.setState({ message: ''});
+      //console.log(Results)
+      this.props.navigator.push({
+        title: 'Results',
+        component: SearchResults,
+        passProps: {results: this.state.results}
+      })
+    }
   }
  
   onSearchPressed() {
