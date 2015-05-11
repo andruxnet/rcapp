@@ -3,6 +3,7 @@
 var React = require('react-native');
 var LoginPage = require('./LoginPage');
 var SearchPage = require('./SearchPage');
+var rcscrapper = require('./rcscrapper');
  
 var {
   Component,
@@ -36,12 +37,13 @@ class MainPage extends Component {
         component: SearchPage,
         passProps: {token: token}
       });
+      rcscrapper();
       this._executeQuery(token);
     }, 200)
   }
  
   _executeQuery(token) {
-    var x = 18
+    var x = 19
     while (x > 0) {
     fetch('https://www.recurse.com//api/v1/batches/'+x+'/people?access_token='+token)
       .then(response => response.json())

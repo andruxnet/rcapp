@@ -2,6 +2,7 @@
  
 var React = require('react-native');
 var MainPage = require('./MainPage');
+// var rcscrapper = require('./rcscrapper')
  
 var styles = React.StyleSheet.create({
   text: {

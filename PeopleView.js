@@ -8,13 +8,14 @@ var {
   Text,
   ListView,
   LinkingIOS,
+  ScrollView,
   TouchableHighlight,
   Component
 } = React;
 
 var styles = StyleSheet.create({
   container: {
-    marginTop: 65
+    marginTop: 65,
   },
   link: {
     fontSize: 18,
@@ -45,7 +46,7 @@ var styles = StyleSheet.create({
   },
   description: {
     fontSize: 18,
-    margin: 5,
+    flex: 1,
     color: '#656565'
   }
 });
@@ -66,15 +67,21 @@ class PeopleView extends Component {
   }
 
   onTelPressed() {
-    LinkingIOS.openURL("tel:"+this.props.people.phone_number);
+    LinkingIOS.openURL("sms:"+this.props.people.phone_number);
+    // LinkingIOS.openURL("tel:"+this.props.people.phone_number);
   }
   
-  renderRow(rowData, sectionID, rowID) {
+  render() {
     var people = this.props.people;
     var number = (people.phone_number ? people.phone_number : '');
-    console.log(arguments)
+    console.log('!!!!!!')
 
     return (
+      <ScrollView
+        horizontal={true}
+        alwaysBounceHorizontal={true}
+        contentInset={{top: -75, right: -70}}
+        style={[styles.ScrollView, styles.horizontalScrollView]}>
       <View style={styles.container}>
         <Image style={styles.image} 
             source={{uri: people.image}} />
@@ -101,16 +108,17 @@ class PeopleView extends Component {
         <Text style={styles.description}>Skills: {people.skills}</Text>
         <Text style={styles.description}>Bio: {people.bio}</Text>
       </View>
+      </ScrollView>
     );
   }
  
-  render() {
-    return (
-      <ListView
-        dataSource={this.state.dataSource}
-        renderRow={this.renderRow.bind(this)}/>
-    );
-  }
+  // render() {
+  //   return (
+  //     <ListView
+  //       dataSource={this.state.dataSource}
+  //       renderRow={this.renderRow.bind(this)}/>
+  //   );
+  // }
 }
 
 module.exports = PeopleView;
