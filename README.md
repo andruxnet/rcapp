@@ -1,6 +1,6 @@
 # rcapp
 
-##social app build for Recurse Center
+social app build for Recurse Center
 
 Users can:
 1) View trending topics from community
