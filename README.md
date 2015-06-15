@@ -1,6 +1,6 @@
 # rcapp
 
-social app build for Recurse Center
+Mobile social app built for Recurse Center in react native
 
 Users can:
 1) View trending topics from community
